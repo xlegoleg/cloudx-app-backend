@@ -2,17 +2,17 @@ const MOCK = new Promise<Array<Record<string, any>>>((resolve) => {
   resolve([
     {
       id: 1,
-      title: "ProductOne",
+      title: "ProductOneFromMyBackend",
       price: 10
     },
     {
       id: 2,
-      title: "ProductTwo",
+      title: "ProductTwoFromMyBackend",
       price: 20
     },
     {
       id: 3,
-      title: "ProductThree",
+      title: "ProductThreeFromMyBackend",
       price: 30
     },
   ])

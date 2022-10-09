@@ -16,10 +16,16 @@ const getProductsById: APIGatewayProxyHandler = async (event) => {
     const records = await MOCK;
     const product = records.find((i) => i.id == id);
     if (id && product) {
-      return formatJSONResponse({
-        statusCode: 200,
-        product,
-      });
+      return {
+        headers: {
+          "Access-Control-Allow-Headers" : "Content-Type",
+          "Access-Control-Allow-Methods": "GET",
+          "Access-Control-Allow-Origin": "*"
+        },
+        ...formatJSONResponse({
+          product,
+        })
+      };
     }
     return ERROR_MESSAGE(id);
   } catch (e) {

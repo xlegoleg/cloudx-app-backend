@@ -12,11 +12,17 @@ const ERROR_MESSAGE = () => {
 
 const getProductsList: APIGatewayProxyHandler = async () => {
   try {
-    const records = await MOCK;
-    return formatJSONResponse({
-      statusCode: 200,
-      records,
-    });
+    const products = await MOCK;
+    return {
+      headers: {
+        "Access-Control-Allow-Headers" : "Content-Type",
+        "Access-Control-Allow-Methods": "GET",
+        "Access-Control-Allow-Origin": "*"
+      },
+      ...formatJSONResponse({
+        products,
+      })
+    };
   } catch (e) {
     ERROR_MESSAGE();
   }
