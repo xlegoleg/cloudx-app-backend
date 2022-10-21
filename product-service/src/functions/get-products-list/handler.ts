@@ -1,16 +1,17 @@
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { APIGatewayProxyHandler } from 'aws-lambda';
 import MOCK from "../../mock/products";
 
 const ERROR_MESSAGE = () => {
-  return formatJSONResponse({
+  return {
     statusCode: 404,
-    message: `Products not found`,
-  });
+    body: JSON.stringify({
+      message: `Products not found`,
+    })
+  }
 }
 
-const getProductsList: APIGatewayProxyHandler = async () => {
+export const getProductsList = async () => {
   try {
     const products = await MOCK;
     return {

@@ -1,16 +1,18 @@
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { APIGatewayProxyHandler } from 'aws-lambda';
 import MOCK from "../../mock/products";
+import { APIGatewayProxyEvent } from "aws-lambda";
 
 const ERROR_MESSAGE = (id) => {
-  return formatJSONResponse({
+  return {
     statusCode: 404,
-    message: `Product with id ${id} not found`,
-  });
+    body: JSON.stringify({
+      message: `Product with id ${id} not found`,
+    })
+  }
 }
 
-const getProductsById: APIGatewayProxyHandler = async (event) => {
+export const getProductsById = async (event: APIGatewayProxyEvent) => {
   const id = event.pathParameters.id
   try {
     const records = await MOCK;
