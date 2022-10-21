@@ -5,7 +5,7 @@ import MOCK from "../../mock/products";
 
 const ERROR_MESSAGE = (id) => {
   return formatJSONResponse({
-    statusCode: 500,
+    statusCode: 404,
     message: `Product with id ${id} not found`,
   });
 }

@@ -5,7 +5,7 @@ import MOCK from "../../mock/products";
 
 const ERROR_MESSAGE = () => {
   return formatJSONResponse({
-    statusCode: 500,
+    statusCode: 404,
     message: `Products not found`,
   });
 }
@@ -29,3 +29,4 @@ const getProductsList: APIGatewayProxyHandler = async () => {
 };
 
 export const main = middyfy(getProductsList);
+
