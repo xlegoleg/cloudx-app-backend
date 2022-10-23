@@ -5,6 +5,7 @@ const serverlessConfiguration: AWS = {
   service: 'product-service',
   frameworkVersion: '3',
   plugins: ['serverless-esbuild'],
+  useDotenv: true,
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
@@ -16,6 +17,19 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      TABLE_PRODUCTS: '${env:TABLE_PRODUCTS}',
+      TABLE_STOCKS: '${env:TABLE_STOCKS}',
+    },
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: 'Allow',
+            Action: 'dynamodb:*',
+            Resource: '*'
+          },
+        ],
+      },
     },
   },
   /**

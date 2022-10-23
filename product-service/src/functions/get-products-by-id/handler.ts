@@ -1,37 +1,31 @@
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import MOCK from "../../mock/products";
 import { APIGatewayProxyEvent } from "aws-lambda";
+import enableCorsHeaders from "@utils/enable-cors.headers";
+import { getProductByIdQuery } from "@db/queries/getProductByIdQuery";
+import NOT_FOUND_ERROR from "@utils/not-found.error";
+import DEFAULT_ERROR from "@utils/default.error";
 
-const ERROR_MESSAGE = (id) => {
-  return {
-    statusCode: 404,
-    body: JSON.stringify({
-      message: `Product with id ${id} not found`,
-    })
-  }
-}
+export const getProductsById = async (e: APIGatewayProxyEvent) => {
+  const id = e.pathParameters.id
 
-export const getProductsById = async (event: APIGatewayProxyEvent) => {
-  const id = event.pathParameters.id
+  console.log('[FN/getProductById]', id, e);
+
   try {
-    const records = await MOCK;
-    const product = records.find((i) => i.id == id);
+    const product = await getProductByIdQuery(id);
     if (id && product) {
       return {
         headers: {
-          "Access-Control-Allow-Headers" : "Content-Type",
-          "Access-Control-Allow-Methods": "GET",
-          "Access-Control-Allow-Origin": "*"
+          ...enableCorsHeaders,
         },
         ...formatJSONResponse({
           product,
-        })
+        }),
       };
     }
-    return ERROR_MESSAGE(id);
+    return NOT_FOUND_ERROR(`Product with id ${id} not found`);
   } catch (e) {
-    return ERROR_MESSAGE(id);
+    return DEFAULT_ERROR();
   }
 };
 
