@@ -22,7 +22,7 @@ export const createProduct = async (e: APIGatewayProxyEvent) => {
       const { productResp, stockResp } = await createProductQuery(body);
       return formatJSONResponse({ ...productResp, ...stockResp });
     } else {
-      return DEFAULT_ERROR('Product data is not valid')
+      return formatJSONResponse({ message: 'Product data is not valid'}, 400);
     }
   } catch (error) {
     DEFAULT_ERROR('An error while creating product')
