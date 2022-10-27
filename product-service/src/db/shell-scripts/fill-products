@@ -1,0 +1,5 @@
+aws dynamodb put-item --table-name cloudx_products --item '{ "id": { "S": "11db848d-3ee3-4bab-a6a1-e184aba78368" }, "title": { "S": "ProductOneFromMyBackend" }, "description": { "S": "ProductOneDescription" }, "price": { "N": "10" } }'
+
+aws dynamodb put-item --table-name cloudx_products --item '{ "id": { "S": "dab0d866-a9c6-4e39-bbb1-d8efaf09fee9" }, "title": { "S": "ProductTwoFromMyBackend" }, "description": { "S": "ProductTwoDescription" }, "price": { "N": "20" } }'
+
+aws dynamodb put-item --table-name cloudx_products --item '{ "id": { "S": "20a7e4b9-5936-4220-a1e0-501a51ba5bf1" }, "title": { "S": "ProductThreeFromMyBackend" }, "description": { "S": "ProductThreeDescription" }, "price": { "N": "30" } }'

@@ -1,31 +1,30 @@
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import MOCK from "../../mock/products";
+import enableCorsHeaders from "@utils/enable-cors.headers";
+import { getProductsListQuery } from "@db/queries/getProductsListQuery";
+import { APIGatewayProxyEvent } from "aws-lambda";
+import DEFAULT_ERROR from "@utils/default.error";
+import NOT_FOUND_ERROR from "@utils/not-found.error";
 
-const ERROR_MESSAGE = () => {
-  return {
-    statusCode: 404,
-    body: JSON.stringify({
-      message: `Products not found`,
-    })
-  }
-}
+export const getProductsList = async (e?: APIGatewayProxyEvent) => {
+  console.log('[FN/getProductsList]', e);
 
-export const getProductsList = async () => {
   try {
-    const products = await MOCK;
-    return {
-      headers: {
-        "Access-Control-Allow-Headers" : "Content-Type",
-        "Access-Control-Allow-Methods": "GET",
-        "Access-Control-Allow-Origin": "*"
-      },
-      ...formatJSONResponse({
-        products,
-      })
-    };
+    const products = await getProductsListQuery();
+    if (products) {
+      return {
+        headers: {
+          ...enableCorsHeaders,
+        },
+        ...formatJSONResponse({
+          products,
+        }),
+      };
+    } else {
+      NOT_FOUND_ERROR('No existing products');
+    }
   } catch (e) {
-    ERROR_MESSAGE();
+    DEFAULT_ERROR();
   }
 };
 
