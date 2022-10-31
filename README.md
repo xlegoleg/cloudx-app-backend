@@ -11,4 +11,8 @@ Check products by id url [GET] - https://9dhpletq6i.execute-api.us-east-1.amazon
 
 Check not existing products url [GET] - https://9dhpletq6i.execute-api.us-east-1.amazonaws.com/dev/products/123
 
+Getting s3 signed url [GET] - https://9dhpletq6i.execute-api.us-east-1.amazonaws.com/dev/import?fileName=test.csv
+
 Check my frontend according to integration - https://d1wtoxjb5s42ah.cloudfront.net/admin/products
+
+Integration with import service - https://d1wtoxjb5s42ah.cloudfront.net/admin/products
