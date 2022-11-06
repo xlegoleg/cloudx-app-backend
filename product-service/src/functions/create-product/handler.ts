@@ -19,8 +19,10 @@ export const createProduct = async (e: APIGatewayProxyEvent) => {
 
   try {
     if (isValidProduct(body)) {
-      const { productResp, stockResp } = await createProductQuery(body);
-      return formatJSONResponse({ ...productResp, ...stockResp });
+      const id = await createProductQuery(body);
+      return formatJSONResponse({
+        productId: id,
+      });
     } else {
       return formatJSONResponse({ message: 'Product data is not valid'}, 400);
     }

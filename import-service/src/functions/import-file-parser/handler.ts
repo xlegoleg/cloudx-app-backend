@@ -1,8 +1,10 @@
 import DEFAULT_ERROR from "@utils/default.error";
 import s3 from "@s3/index";
-import readFile from "@utils/read-csv-file.util";
 import middy from "@middy/core";
 import { S3Event } from "aws-lambda";
+import readCSVFile from '@utils/read-csv-file.util';
+import SQSService from '@sqs/index';
+import { formatJSONResponse } from '@libs/api-gateway';
 
 export const importFileParser = async (e: S3Event) => {
   const records = e.Records
@@ -26,14 +28,20 @@ export const importFileParser = async (e: S3Event) => {
       CopySource: `${process.env.S3_BUCKET_NAME}/${key}`,
       Key: key.replace(process.env.S3_UPlOADED_FOLDER, process.env.S3_PARSED_FOLDER),
     }
-    const stream = s3.getObject(params).createReadStream();
+    const stream = await s3.getObject(params);
 
-    const updateS3 = async () => {
-      await s3.copyObject(copyParams).promise();
-      await s3.deleteObject(params).promise();
+    const parsedRecords = await readCSVFile(stream.Body);
+
+    for (const product of parsedRecords) {
+      await SQSService.sendMessage(JSON.stringify(product ?? {}));
     }
 
-    await readFile(stream, updateS3, null);
+    await s3.copyObject(copyParams);
+    await s3.deleteObject(params);
+
+    return formatJSONResponse({
+      success: true,
+    });
   }
   catch (error) {
     return DEFAULT_ERROR(error);

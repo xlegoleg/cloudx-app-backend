@@ -22,6 +22,8 @@ const serverlessConfiguration: AWS = {
       S3_UPlOADED_FOLDER: '${env:S3_UPlOADED_FOLDER}',
       S3_PARSED_FOLDER: '${env:S3_PARSED_FOLDER}',
       REGION: '${env:REGION}',
+      CATALOG_SQS: '${env:CATALOG_SQS}',
+      CATALOG_SQS_URL: '${env:CATALOG_SQS_URL}'
     },
     iam: {
       role: {
@@ -36,6 +38,11 @@ const serverlessConfiguration: AWS = {
             Action: 's3:*',
             Resource: 'arn:aws:s3:::cloudx-import-bucket/*',
           },
+          {
+            Effect: 'Allow',
+            Action: ['sqs:SendMessage'],
+            Resource: ['${env:CATALOG_SQS_RESOURCE}'],
+          }
         ],
       },
     },

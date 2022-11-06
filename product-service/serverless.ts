@@ -19,6 +19,10 @@ const serverlessConfiguration: AWS = {
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
       TABLE_PRODUCTS: '${env:TABLE_PRODUCTS}',
       TABLE_STOCKS: '${env:TABLE_STOCKS}',
+      CATALOG_SQS: '${env:CATALOG_SQS}',
+      CATALOG_PRODUCT_TOPIC_NAME: '${env:CATALOG_PRODUCT_TOPIC_NAME}',
+      CATALOG_PRODUCT_TOPIC_ARN: '${env:CATALOG_PRODUCT_TOPIC_ARN}',
+      REGION: '${env:REGION}',
     },
     iam: {
       role: {
@@ -28,9 +32,47 @@ const serverlessConfiguration: AWS = {
             Action: 'dynamodb:*',
             Resource: '*'
           },
+          {
+            Effect: 'Allow',
+            Action: ['sns:Publish'],
+            Resource: ['${env:CATALOG_PRODUCT_TOPIC_ARN}']
+          }
         ],
       },
     },
+  },
+  resources: {
+    Resources: {
+      CatalogItemsQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: '${env:CATALOG_SQS}',
+        }
+      },
+      CreateProductTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: '${env:CATALOG_PRODUCT_TOPIC_NAME}',
+          Subscription: [
+            {
+              Endpoint: '${env:TEST_EMAIL}',
+              Protocol: 'email'
+            }
+          ]
+        },
+      },
+      CreateProductTopicSubscription: {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          Endpoint: '${env:TEST_EMAIL2}',
+          Protocol: 'email',
+          TopicArn: { Ref: "CreateProductTopic" },
+          FilterPolicy: {
+            withoutCount: [{ numeric: ['=', 1] }]
+          }
+        }
+      }
+    }
   },
   /**
    * To avoid lots of imports, using functions as an object here
