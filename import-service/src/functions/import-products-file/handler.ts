@@ -34,7 +34,12 @@ export const importProductsFile = async (e: APIGatewayEvent) => {
     };
   }
   catch (error) {
-    return DEFAULT_ERROR(error);
+    return {
+      headers: {
+        ...enableCorsHeaders,
+      },
+      ...DEFAULT_ERROR(error),
+    };
   }
 };
 

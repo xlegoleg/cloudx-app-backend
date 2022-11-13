@@ -23,7 +23,8 @@ const serverlessConfiguration: AWS = {
       S3_PARSED_FOLDER: '${env:S3_PARSED_FOLDER}',
       REGION: '${env:REGION}',
       CATALOG_SQS: '${env:CATALOG_SQS}',
-      CATALOG_SQS_URL: '${env:CATALOG_SQS_URL}'
+      CATALOG_SQS_URL: '${env:CATALOG_SQS_URL}',
+      AUTH_FUNC_ARN: '${env:AUTH_FUNC_ARN}',
     },
     iam: {
       role: {
