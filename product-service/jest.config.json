@@ -5,6 +5,7 @@
     "^@functions/(.*)": "<rootDir>/src/functions/$1",
     "^@libs/(.*)": "<rootDir>/src/libs/$1",
     "^@utils/(.*)": "<rootDir>/src/utils/$1",
-    "^@db/(.*)": "<rootDir>/src/db/$1"
+    "^@db/(.*)": "<rootDir>/src/db/$1",
+    "^@sns/(.*)": "<rootDir>/src/sns/$1"
   }
 }

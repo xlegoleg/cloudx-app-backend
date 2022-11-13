@@ -1,34 +1,35 @@
 const csv = require('csv-parser');
 
-const readFile = async (
+const readFileAsync = async (
     readStream,
-    asyncCallback?: (args?: any) => Promise<any>,
-    callback?: (args?: any) => void,
 ) => {
-  return new Promise<void>((resolve, reject) => {
+  return new Promise<Array<Record<string, any>>>((resolve, reject) => {
+    const records: Array<Record<string, any>> = [];
     readStream
         .pipe(csv())
         .on('data', (chunk) => {
-          console.log('[UTIL/readFile]: ', chunk);
+          records.push(chunk);
         })
         .on('error', (error) => {
-          console.error('[UTIL/readFile]: ', error);
+          console.error('[UTIL/readFileAsync]: ', error);
           reject(error);
         })
         .on('end',() => {
-          if (asyncCallback) {
-            asyncCallback().then(() => {
-              resolve();
-            }).catch((e) => {
-              reject(e);
-            })
-          }
-          if (callback) {
-            callback()
-            resolve();
-          }
+          resolve(records);
         });
   })
 };
 
-export default readFile;
+const readCSVFile = async (
+  readStream,
+) => {
+  try {
+    return await readFileAsync(readStream);
+  }
+  catch (error) {
+    console.error('[UTIL/readCSVFile]: ', error);
+    throw (error);
+  }
+};
+
+export default readCSVFile;

@@ -8,7 +8,7 @@ export const createProductQuery = async (product: IProduct) => {
   const id = v4();
 
   try {
-    const productResp = await DB.send(new PutCommand({
+    await DB.send(new PutCommand({
       TableName: process.env.TABLE_PRODUCTS,
       Item: {
         id,
@@ -17,15 +17,12 @@ export const createProductQuery = async (product: IProduct) => {
         price,
       },
     }));
-    const stockResp = await DB.send(new PutCommand({
+    await DB.send(new PutCommand({
       TableName: process.env.TABLE_STOCKS,
       Item: { product_id: id, count }
     }));
 
-    return {
-      productResp,
-      stockResp
-    }
+    return id;
   } catch (e) {
     console.error('[DB/createProductQuery]', e);
     throw e;

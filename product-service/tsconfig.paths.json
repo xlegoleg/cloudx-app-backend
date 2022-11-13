@@ -5,7 +5,8 @@
       "@functions/*": ["src/functions/*"],
       "@libs/*": ["src/libs/*"],
       "@utils/*": ["src/utils/*"],
-      "@db/*": ["src/db/*"]
+      "@db/*": ["src/db/*"],
+      "@sns/*": ["src/sns/*"]
     }
   }
 }

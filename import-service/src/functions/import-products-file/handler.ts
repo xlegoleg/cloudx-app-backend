@@ -4,6 +4,8 @@ import DEFAULT_ERROR from "@utils/default.error";
 import s3 from "@s3/index";
 import enableCorsHeaders from "@utils/enable-cors.headers";
 import { formatJSONResponse } from "@libs/api-gateway";
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 export const importProductsFile = async (e: APIGatewayEvent) => {
   const fileName = e.queryStringParameters.fileName
@@ -16,9 +18,11 @@ export const importProductsFile = async (e: APIGatewayEvent) => {
       Bucket: `${process.env.S3_BUCKET_NAME}`,
       Key: s3Path,
       ContentType: 'text/csv',
-      Expires: 60,
     }
-    const url = await s3.getSignedUrlPromise('putObject', requestParams);
+    const putCommand = new PutObjectCommand(requestParams);
+    const url = await getSignedUrl(s3, putCommand, {
+      expiresIn: 3000,
+    });
 
     return {
       headers: {
