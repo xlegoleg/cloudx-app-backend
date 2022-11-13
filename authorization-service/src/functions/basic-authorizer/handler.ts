@@ -10,10 +10,12 @@ export const basicAuthorizer = async (e: APIGatewayTokenAuthorizerEvent) => {
     const { authorizationToken, methodArn } = e
 
     if (authorizationToken) {
-      const token = authorizationToken;
-      const { login, password } = parseAuthToken(token)
+      const token = authorizationToken.split(' ')[1];
+      const { login, password } = parseAuthToken(token);
       if (process.env[login] === password) {
         return generatePolicy(methodArn, 'Allow');
+      } else {
+        return generatePolicy();
       }
     }
     return generatePolicy();
